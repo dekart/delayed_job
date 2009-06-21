@@ -15,7 +15,7 @@ module Delayed
       Delayed::Job.max_priority = options[:max_priority] if options.has_key?(:max_priority)
     end
 
-    def start
+    def start(job_pool = 100)
       say "*** Starting job worker #{Delayed::Job.worker_name}"
 
       trap('TERM') { say 'Exiting...'; $exit = true }
@@ -25,7 +25,7 @@ module Delayed
         result = nil
 
         realtime = Benchmark.realtime do
-          result = Delayed::Job.work_off
+          result = Delayed::Job.work_off(job_pool)
         end
 
         count = result.sum
