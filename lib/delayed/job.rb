@@ -31,6 +31,8 @@ module Delayed
     self.min_priority = nil
     self.max_priority = nil
 
+    named_scope :with_error, {:conditions => "last_error IS NOT NULL"}
+
     # When a worker is exiting, make sure we don't have any locked jobs.
     def self.clear_locks!
       update_all("locked_by = null, locked_at = null", ["locked_by = ?", worker_name])
